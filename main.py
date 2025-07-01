@@ -51,7 +51,60 @@ class Game_State:
 
         # region CHECKHEIGHTS
         for height in [0,1,2,3]:
-            pass
+
+            slice_2d = []
+
+            for ROD in self.RODS:
+
+                slice_2d.append(ROD[height])
+
+
+            # region slice_horizontal
+            slice_start = 0
+            slice_end = 4
+            slice_horizontal = slice_2d[slice_start:slice_end]
+
+            for i in range(3):
+                winner = check_four(slice_horizontal)
+                if winner != 0:
+                    return winner
+                slice_start += 4
+                slice_end += 4
+                slice_horizontal = slice_2d[slice_start:slice_end]
+            # endregion slice_horizontal
+
+            start = 0
+            slice_vertical = slice_2d[start::4]
+
+
+            for i in range(3):
+                winner = check_four(slice_vertical)
+                if winner != 0:
+                    return winner
+                start += 1
+                slice_vertical = slice_2d[start::4]
+
+
+            diagonal_down_right = slice_2d[0::5]
+            winner = check_four(diagonal_down_right)
+
+            if winner != 0:
+                return winner
+            diagonal_down_left= slice_2d[3:13:3]
+            winner = check_four(diagonal_down_left)
+            if winner != 0:
+                return winner
+
+
+
+
+
+
+
+
+
+
+
 
             # width and length
 
