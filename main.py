@@ -49,7 +49,7 @@ class Game_State:
         #endregion CHECKRODS
 
 
-        # region CHECKHEIGHTS
+        # region CHECK2DSLCIES
         for height in [0,1,2,3]:
 
             slice_2d = []
@@ -109,14 +109,104 @@ class Game_State:
             # width and length
 
 
-            # digagonals on 2D # TODO find winner of 2d height slices
+            # digagonals on 2D #
 
 
-        # endregion CHECKHEIGHTS
+
+        # endregion CHECK2DSLCIES
 
         # region CHECK3DDIAGONALS
 
+
+
+
         # endregion CHECK3DDIAGONALS
+
+
+        top_vertical_starts = [0,1,2,3]
+        bottom_vertical_starts = [11,13,14,15]
+
+
+        current_diagonal = []
+        for start in top_vertical_starts:
+
+            ROD_postion = start
+            height = 0
+            for i in range(3):
+                current_diagonal.append(self.RODS[ROD_postion][height])
+                height += 1
+                ROD_postion += 4
+            winner = check_four(current_diagonal)
+            if winner != 0:
+                return winner
+
+
+        current_diagonal = []
+        for start in bottom_vertical_starts:
+            ROD_postion = start
+            height = 0
+            for i in range(3):
+                current_diagonal.append(self.RODS[ROD_postion][height])
+                height += 1
+                ROD_postion += -4
+            winner = check_four(current_diagonal)
+            if winner != 0:
+                return winner
+
+        left_horizontal_starts = list([i for i in range(16)])[0::4]
+
+        current_diagonal = []
+        for start in left_horizontal_starts:
+            ROD_postion = start
+            height = 0
+            for i in range(3):
+                current_diagonal.append(self.RODS[ROD_postion][height])
+                ROD_postion += 1
+                height += 1
+            winner = check_four(current_diagonal)
+            if winner != 0:
+                return winner
+
+
+
+
+        right_horizontal_starts = list([i for i in range(16)])[3::4]
+        current_diagonal = []
+        for start in right_horizontal_starts:
+            ROD_postion = start
+            height = 0
+            for i in range(3):
+                current_diagonal.append(self.RODS[ROD_postion][height])
+                ROD_postion -= 1
+
+                height += 1
+            winner = check_four(current_diagonal)
+            if winner != 0:
+                return winner
+
+
+
+        top_corner_starts = [0,3,12,15]
+        offsets = [5,3,-3,-5]
+
+        current_diagonal = []
+        for index,start in enumerate(top_corner_starts):
+
+            ROD_postion = start
+            height = 0
+
+
+            for i in range(3):
+                current_diagonal.append(self.RODS[ROD_postion][height])
+                height += 1
+                ROD_postion += offsets[index]
+            winner = check_four(current_diagonal)
+            if winner != 0:
+                return winner
+
+
+        return 0
+
 
     def do_move(self,ROD_index) -> bool:
 
@@ -128,6 +218,7 @@ class Game_State:
             if point == 0:
                 self.RODS[ROD_index][point_index] = 1 if self.move_1 else 2
                 move_executed = True
+                self.move_1 = not self.move_1
                 break
 
 
